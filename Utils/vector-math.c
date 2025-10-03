@@ -2,7 +2,7 @@
 #include <std.lib>
 #include <stdio.h>
 
-/** VECTOR MATH */
+/** VECTOR MATH **/
 typedef double vec3[3];
 
 double vec3_dot(vec3 u, vec3 w) {
@@ -42,8 +42,8 @@ double image[Y][X][3];
 
 /** TEXTURE RENDERING */
 
-#define     TX  1300
-#define     TY  827
+#define     TX  512
+#define     TY  512
 
 double texture[TY][TX][3];
 
@@ -52,17 +52,17 @@ void load_texture(void) {
     int x, y;
     int r, g, b;
 
-    f = fopen("earth2.ppm", "rb");
+    // file to load texture from
+    f = fopen("../Textures/Martini.ppm", "rb");
 
     fscanf(f, "%s", s); // P3
     fscanf(f, "%s", s); // 1300
     fscanf(f, "%s", s); // 827
     fscanf(f, "%s", s); // 255
 
-    // fread(texture, 3, TX * TY, f);
     for (y = 0; y < TY; y++) {
         for (x = 0; x < TX; x++) {
-            fscanf(f, "%d %d %d". &r, &g, &b);
+            fscanf(f, "%d %d %d", &r, &g, &b);
             texture[y][x][0] = r / 255.0;
             texture[y][x][1] = g / 255.0;
             texture[y][x][2] = b / 255.0;
@@ -70,11 +70,12 @@ void load_texture(void) {
     }
     fclose(f);
 
+    // file to print texture to, for testing
     f = fopen("foo.ppm", "wb");
     fprintf("P3\n1300 827\n255");
     for (y = 0; y < TY; y++) {
         for (x = 0; x < TX; x++) {
-            fprintf(f, "%d %d %d". 
+            fprintf(f, "%d %d %d", 
                 (int) texture[y][x][0] * 255,
                 (int) texture[y][x][1] * 255, 
                 (int) texture[y][x][2] * 255);
