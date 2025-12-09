@@ -1,11 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "texture-load.h"
 
-#define TY  512
-#define TX  512
-
-void load_texture(char * path, double texture[TY][TX][3]) {
+void load_texture(double texture[TY][TX][3]) {
     FILE *f;
     int x, y;
     unsigned char r, g, b;

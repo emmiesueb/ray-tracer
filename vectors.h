@@ -1,3 +1,6 @@
+#ifndef VECTORS_H
+#define VECTORS_H
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -26,3 +29,9 @@ void vec3_sub(vec3, vec3, vec3);
 void vec3_add(vec3, vec3, vec3);
 
 void vec3_scalar(vec3, vec3, double);
+
+double length(vec3);
+
+double length_sqd(vec3);
+
+#endif

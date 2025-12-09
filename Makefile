@@ -2,11 +2,18 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -O2
 
-TARGET = raytracer
-
 #Source files
 SRC = main.c vectors.c texture-load.c ray.c
 OBJ = $(SRC:.c=.o)
+
+# Detect platform
+ifeq ($(OS),Windows_NT)
+    RM = del /Q
+	TARGET = raytracer.exe
+else
+    RM = rm -f
+	TARGET = raytracer
+endif
 
 all: $(TARGET)
 
@@ -19,4 +26,4 @@ $(TARGET): $(OBJ)
 
 # Clean up rule
 clean:
-	rm -f $(OBJ) $(TARGET)
+	$(RM) $(OBJ) $(TARGET)

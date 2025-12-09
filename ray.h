@@ -1,3 +1,6 @@
+#ifndef RAY_H
+#define RAY_H
+
 #include "vectors.h"
 
 typedef struct {
@@ -6,3 +9,5 @@ typedef struct {
 } ray;
 
 point3 at(ray, double);
+
+#endif
