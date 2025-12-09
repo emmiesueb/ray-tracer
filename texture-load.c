@@ -20,7 +20,6 @@ void load_texture(double texture[TY][TX][3]) {
 
     for (y = 0; y < TY; y++) {
         for (x = 0; x < TX; x++) {
-            // fscanf(f, "%d %d %d", &r, &g, &b);
             fread(&r, 1, 1, f);
             fread(&g, 1, 1, f);
             fread(&b, 1, 1, f);
@@ -34,7 +33,7 @@ void load_texture(double texture[TY][TX][3]) {
     // file to print texture to, for testing
     f = fopen("../Assets/foo.ppm", "wb");
     // printf("create file success");
-    fprintf(f, "P6\n512 512\n255\n");
+    fprintf(f, "P6\n512\n512\n255\n");
     for (y = 0; y < TY; y++) {
         for (x = 0; x < TX; x++) {
             fprintf(f, "%d %d %d\n", 

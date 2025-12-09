@@ -4,6 +4,7 @@
 
 #include "vectors.h"
 #include "ray.h"
+#include "color.h"
 #include "camera.h"
 #include "texture-load.h"
 
@@ -114,9 +115,11 @@ int main() {
                 if (bary.x >= 0 && bary.y >= 0 && bary.z >= 0) {
                     u = (int) (uv.x * TX);
                     v = (int) (uv.y * TY);
-                    image[y][x][0] = texture[v][u][0];
-                    image[y][x][1] = texture[v][u][1];
-                    image[y][x][2] = texture[v][u][2];
+                    if (u >= 0 && u < TX && v >= 0 && v < TY) {
+                        image[y][x][0] += texture[v][u][0];
+                        image[y][x][1] += texture[v][u][1];
+                        image[y][x][2] += texture[v][u][2];
+                    }
                 }
             }
         }
@@ -128,9 +131,9 @@ int main() {
     for (y = Y-1; y >= 0; y--) {
         for (x = 0; x < X; x++) {
             fprintf(f, "%d %d %d\n",
-                (unsigned char) image[y][x][0] * 255.99 / SAMPLES_PER_PIXEL,
-                (unsigned char) image[y][x][1] * 255.99 / SAMPLES_PER_PIXEL,
-                (unsigned char) image[y][x][2] * 255.99 / SAMPLES_PER_PIXEL);
+                (unsigned char) (image[y][x][0] * 255.99 / SAMPLES_PER_PIXEL),
+                (unsigned char) (image[y][x][1] * 255.99 / SAMPLES_PER_PIXEL),
+                (unsigned char) (image[y][x][2] * 255.99 / SAMPLES_PER_PIXEL));
         }
     }
     fclose(f);

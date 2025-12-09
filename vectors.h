@@ -30,7 +30,9 @@ void vec3_add(vec3, vec3, vec3);
 
 void vec3_scalar(vec3, vec3, double);
 
-double length(vec3);
+void vec3_unit(vec3, vec3);
+
+double vec3_length(vec3);
 
 double length_sqd(vec3);
 

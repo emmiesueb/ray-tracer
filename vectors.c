@@ -46,6 +46,13 @@ void vec3_scalar(vec3 out, vec3 v, double s) {
 }
 
 /**
+ * Unit vector
+ */
+void vec3_unit(vec3 out, vec3 v) {
+    vec3_scalar(out, v, (1.0 / vec3_length(v)));
+}
+
+/**
  * Helper
  */
 double length_sqd(vec3 v) {
@@ -55,6 +62,6 @@ double length_sqd(vec3 v) {
 /**
  * Length of the vector
  */
-double length(vec3 v) {
+double vec3_length(vec3 v) {
     return sqrt(length_sqd(v));
 }
