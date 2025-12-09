@@ -26,9 +26,3 @@ void vec3_sub(vec3, vec3, vec3);
 void vec3_add(vec3, vec3, vec3);
 
 void vec3_scalar(vec3, vec3, double);
-
-double x(vec3);
-
-double y(vec3);
-
-double z(vec3);

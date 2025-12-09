@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "texture-load.h"
 
 #define TY  512
 #define TX  512
@@ -11,7 +12,7 @@ void load_texture(char * path, double texture[TY][TX][3]) {
     char s[256];
 
     // file to load texture from
-    f = fopen("../Textures/Martini.ppm", "rb");
+    f = fopen("./Textures/Martini.ppm", "rb");
     if (!f) {
         perror("Failed to open file");
         exit(1);
