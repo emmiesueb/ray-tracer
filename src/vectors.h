@@ -1,0 +1,37 @@
+#ifndef VECTORS_H
+#define VECTORS_H
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+typedef struct {
+    double x;
+    double y;
+    double z;
+} vec3;
+
+typedef vec3 point3;
+
+vec3 vec3_create(double, double, double);
+
+double vec3_dot(vec3, vec3);
+
+vec3 vec3_cross(vec3, vec3);
+
+vec3 vec3_sub(vec3, vec3);
+
+vec3 vec3_add(vec3, vec3);
+
+vec3 vec3_scalar(vec3, double);
+
+vec3 vec3_unit(vec3);
+
+vec3 vec3_negative(vec3);
+
+double vec3_length(vec3);
+
+double length_sqd(vec3);
+
+#endif
