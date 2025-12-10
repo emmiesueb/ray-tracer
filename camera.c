@@ -41,7 +41,7 @@ void initialize(camera *c) {
     
     vec3_add(&v4, *c->pixel_delta_u, *c->pixel_delta_v);
     vec3_scalar(&r3, v4, 0.5);
-    vec3_add(c->pixel100_loc, viewport_upper_left, r3);
+    vec3_add(c->pixel00_loc, viewport_upper_left, r3);
 }
 
 /**

@@ -31,7 +31,7 @@ int main() {
                 vec3_scalar(&v1, *c->pixel_delta_u, (double) i);
                 vec3_scalar(&v2, *c->pixel_delta_v, (double) j);
                 vec3_add(&r1, v1, v2);
-                vec3_add(&pixel_center, *c->pixel100_loc, r1);
+                vec3_add(&pixel_center, *c->pixel00_loc, r1);
                 
                 // ray direction:
                 vec3* ray_dir = malloc(sizeof(vec3));
