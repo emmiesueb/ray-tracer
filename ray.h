@@ -4,10 +4,10 @@
 #include "vectors.h"
 
 typedef struct {
-    point3 orig;
-    vec3 dir;
+    point3* orig;
+    vec3* dir;
 } ray;
 
-point3 at(ray, double);
+point3* at(ray, double);
 
 #endif
