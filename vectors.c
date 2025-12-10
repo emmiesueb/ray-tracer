@@ -12,44 +12,52 @@ double vec3_dot(vec3 v, vec3 w) {
 /**
  * Cross product between two vectors
  */
-void vec3_cross(vec3 out, vec3 v, vec3 w) {
+vec3 vec3_cross(vec3 v, vec3 w) {
+    vec3 out;
     out.x = v.y * w.z - w.y * v.z;
     out.y = w.x * v.z - v.x * w.z;
     out.z = v.x * w.y - v.y * w.x;
+    return out;
 }
 
 /**
  * Vector subtraction
  */
-void vec3_sub(vec3 out, vec3 v, vec3 w) {
+vec3 vec3_sub(vec3 v, vec3 w) {
+    vec3 out;
     out.x = v.x - w.x;
     out.y = v.y - w.y;
     out.z = v.z - v.z;
+    return out;
 }
 
 /**
  * Vector addition
  */
-void vec3_add(vec3 out, vec3 v, vec3 w) {
+vec3 vec3_add(vec3 v, vec3 w) {
+    vec3 out;
     out.x = v.x + w.x;
     out.y = v.y + w.y;
     out.z = v.z + w.z;
+    return out;
 }
 
 /**
  * Multiple a vector by a scalar
  */
-void vec3_scalar(vec3 out, vec3 v, double s) {
+vec3 vec3_scalar(vec3 v, double s) {
+    vec3 out;
     out.x = v.x * s;
     out.y = v.y * s;
     out.z = v.z * s;
+    return out;
 }
 
 /**
  * Unit vector
  */
-void vec3_unit(vec3 out, vec3 v) {
-    vec3_scalar(out, v, (1.0 / vec3_length(v)));
+vec3 vec3_unit(vec3 v) {
+    return vec3_scalar(v, (1.0 / vec3_length(v)));
 }
 
 /**

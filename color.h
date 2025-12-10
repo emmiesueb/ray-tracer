@@ -4,12 +4,9 @@
 #include <stdlib.h>
 
 #include "vectors.h"
-#include "ray.h"
 
 typedef vec3 color;
 
-void write_color(color);
-
-color ray_color(ray);
+const char* write_color(char* restrict, color);
 
 #endif
