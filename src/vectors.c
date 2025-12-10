@@ -1,5 +1,16 @@
 #include "vectors.h"
 
+
+/**
+ * Create a vector with coordiantes:
+ */
+vec3 vec3_create(double x, double y, double z) {
+    vec3 v;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    return v;
+}
 /** VECTOR MATH **/
 
 /**
@@ -12,53 +23,46 @@ double vec3_dot(vec3 v, vec3 w) {
 /**
  * Cross product between two vectors
  */
-void vec3_cross(vec3* out, vec3 v, vec3 w) {
-    out->x = v.y * w.z - w.y * v.z;
-    out->y = w.x * v.z - v.x * w.z;
-    out->z = v.x * w.y - v.y * w.x;
+vec3 vec3_cross(vec3 v, vec3 w) {
+    return vec3_create( 
+        v.y * w.z - w.y * v.z,
+        w.x * v.z - v.x * w.z,
+        v.x * w.y - v.y * w.x);
 }
 
 /**
  * Vector subtraction
  */
-void vec3_sub(vec3* out, vec3 v, vec3 w) {
-    out->x = v.x - w.x;
-    out->y = v.y - w.y;
-    out->z = v.z - v.z;
+vec3 vec3_sub(vec3 v, vec3 w) {
+    return vec3_create(v.x - w.x, v.y - w.y, v.z - w.z);
 }
 
 /**
  * Vector addition
  */
-void vec3_add(vec3* out, vec3 v, vec3 w) {
-    out->x = v.x + w.x;
-    out->y = v.y + w.y;
-    out->z = v.z + w.z;
+vec3 vec3_add(vec3 v, vec3 w) {
+    return vec3_create(v.x + w.x, v.y + w.y, v.z + w.z);
 }
 
 /**
  * Multiple a vector by a scalar
  */
-void vec3_scalar(vec3* out, vec3 v, double s) {
-    out->x = v.x * s;
-    out->y = v.y * s;
-    out->z = v.z * s;
+vec3 vec3_scalar(vec3 v, double s) {
+    return vec3_create(v.x * s, v.y * s, v.z * s);
 }
 
 /**
  * Unit vector
  */
-void vec3_unit(vec3* out, vec3 v) {
-    vec3_scalar(out, v, (1.0 / vec3_length(v)));
+vec3 vec3_unit(vec3 v) {
+    return vec3_scalar(v, (1.0 / vec3_length(v)));
 }
 
 /**
  * Negative:
  */
-void vec3_negative(vec3* out, vec3 v) {
-    out->x = -v.x;
-    out->y = -v.y;
-    out->z = -v.z;
+vec3 vec3_negative(vec3 v) {
+    return vec3_create(-v.x, -v.y, -v.z);
 }
 
 /**

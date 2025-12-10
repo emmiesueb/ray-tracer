@@ -14,19 +14,21 @@ typedef struct {
 
 typedef vec3 point3;
 
+vec3 vec3_create(double, double, double);
+
 double vec3_dot(vec3, vec3);
 
-void vec3_cross(vec3*, vec3, vec3);
+vec3 vec3_cross(vec3, vec3);
 
-void vec3_sub(vec3*, vec3, vec3);
+vec3 vec3_sub(vec3, vec3);
 
-void vec3_add(vec3*, vec3, vec3);
+vec3 vec3_add(vec3, vec3);
 
-void vec3_scalar(vec3*, vec3, double);
+vec3 vec3_scalar(vec3, double);
 
-void vec3_unit(vec3*, vec3);
+vec3 vec3_unit(vec3);
 
-void vec3_negative(vec3*, vec3);
+vec3 vec3_negative(vec3);
 
 double vec3_length(vec3);
 
