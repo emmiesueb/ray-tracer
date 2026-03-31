@@ -1,59 +1,57 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include "scenes.h"
 
-#include "camera.h"
-#include "texture-load.h"
+int main(int argc, char* argvc[]) {
 
-#define frand() (rand() / (RAND_MAX + 1.0))
-
-// ASPECT RATIO
-
-#define     SAMPLES_PER_PIXEL   100
-
-int main() {
-    FILE *f;
-
-    // Camera
-    camera *c = malloc(sizeof(camera));
-    initialize(c);
-
-    // list of objects
-    sphere **spheres = malloc(sizeof(sphere*));
-    sphere *s1 = malloc(sizeof(sphere));
-    s1->center = vec3_create(0, 0, -1);
-    s1->radius = 0.5;
-    spheres[0] = s1;
-
-    // Render
-    f = fopen("image.ppm", "wb");
-    fprintf(f, "P3\n%d\n%d\n255\n", c->image_width, c->image_height);
-
-
-        for (int j = 0; j < c->image_height; j++) {
-            for (int i = 0; i < c->image_width; i++) {
-                // pixel center:
-                vec3 r1 = vec3_add(
-                    vec3_scalar(c->pixel_delta_u, (double) i), 
-                    vec3_scalar(c->pixel_delta_v, (double) j));
-                point3 pixel_center = vec3_add(c->pixel00_loc, r1);
-
-                // ray direction:
-                ray* r = malloc(sizeof(ray));
-                r->dir = vec3_sub(pixel_center, c->center);
-                // ray origin:
-                r->orig = c->center;
-
-                // color pixel_color = ray_color(r, spheres);
-                color pixel_color = ray_color(r, s1);
-                char* restrict line = malloc(sizeof(const char*) * 20);
-                write_color(line, pixel_color);
-                fprintf(f, "%s", line);
-                free(line);
-            }
+    // Generate objects
+    if (argc == 1) {
+        printf("Generating bouncing spheres.\n");
+        bouncing_spheres();
+    }
+    else if (argc > 1) {
+        int input = atoi(argvc[1]);
+        switch (input) {
+            case 2:
+                printf("Generating checkered spheres.\n");
+                checkered_spheres();
+                break;
+            case 3:
+                printf("Generating textured spheres.\n");
+                textured_spheres();
+                break;
+            case 4:
+                printf("Generating colorful quads.\n");
+                quads();
+                break;
+            case 5:
+                printf("Generating a simple light scene.\n");
+                simple_light();
+                break;
+            case 6:
+                printf("Generating a simple triangle scene.\n");
+                simple_triangle();
+                break;
+            case 7:
+                printf("Generating a low-poly eevee model.\n");
+                low_poly_mesh();
+                break;
+            case 8:
+                printf("Generating a finalized scene.\n");
+                final_scene();
+                break;
+            default:
+                printf("Generating bouncing spheres.\n");
+                bouncing_spheres();
+                break;
         }
+    }
 
-    fclose(f);
+    int i = 0;
+    while (objects[i] != NULL) ++i;
+    printf("Building %d nodes.\n", i);
+    world = build_bvh(objects, 0, i);
+    // Render
+    render();
+    printf("Done!\n");
 
     return 0;
 }

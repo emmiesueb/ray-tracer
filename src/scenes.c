@@ -1,0 +1,278 @@
+#include "scenes.h"
+
+object** objects = NULL;
+
+/**
+ * Initializes each scene:
+ */
+void scene_init() {
+    objects = malloc(sizeof(object*) * 10);
+    if (objects == NULL) {
+        perror("Malloc error.");
+        exit(1);
+    }
+}
+
+/**
+ * Generate a scene with various bouncing spheres:
+ */
+void bouncing_spheres() {
+    int capacity = 10, i = 0;
+    scene_init();
+    initialize((16.0/9.0), 400, vec3_create(13,2,3), vec3_create(0,0,0), 20, vec3_create(0,1,0), 0.6);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    texture* tex = checkered_create_from_solids(0.32, vec3_create(0.2, 0.3, .1), vec3_create(.9, .9, .9));
+    material* ground = lambertian_create(tex);
+    objects[i++] = sphere_create(vec3_create(0, -1000, 0), 1000, ground);
+
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            // reallocate objects
+            if (i >= capacity) {
+                capacity *= 2;
+                objects = realloc(objects, sizeof(object*) * capacity);
+                if (objects == NULL) {
+                    perror("Realloc error.");
+                    exit(1);
+                }
+            }
+            double choose_mat = rand_double();
+            point3 center = vec3_create(a + 0.9*rand_double(), 0.2, b + 0.9*rand_double());
+
+            if (vec3_length(vec3_sub(center, vec3_create(4, 0.2, 0))) > 0.9) {
+                material* mat = malloc(sizeof(material));
+                if (mat == NULL) {
+                    perror("Malloc error.");
+                    exit(1);
+                }
+                // diffuse
+                if (choose_mat < 0.8) {
+                    color albedo = vec3_mul(vec3_rand(), vec3_rand());
+                    mat = lambertian_create(solid_create(albedo.x, albedo.y, albedo.z));
+                    point3 center2 = vec3_add(center, vec3_create(0, random_double(interval_create(0, 0.5)), 0));
+                    objects[i++] = moving_sphere_create(center, center2, 0.2, mat);
+                }
+                // metal
+                else if (choose_mat < 0.95) {
+                    color albedo = vec3_random(interval_create(0.5, 1));
+                    double fuzz = random_double(interval_create(0, 0.5));
+                    mat = metal_create(albedo, fuzz);
+                    objects[i++] = sphere_create(center, 0.2, mat);
+                }
+                // dielectric
+                else {
+                    mat = dielectric_create(1.5);
+                    objects[i++] = sphere_create(center, 0.2, mat);
+                }
+            }
+        }
+    }
+    objects[i] = NULL;
+}
+
+/**
+ * Generate a scene with various checkered spheres:
+ */
+void checkered_spheres() {
+    scene_init();
+    initialize((16.0/9.0), 400, vec3_create(13,2,3), vec3_create(0,0,0), 20, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    texture* tex = checkered_create_from_solids(0.32, vec3_create(.2, .3, .1), vec3_create(.9, .9, .9));
+
+    objects[0] = sphere_create(vec3_create(0, -10, 0), 10, lambertian_create(tex));
+    objects[1] = sphere_create(vec3_create(0, 10, 0), 10, lambertian_create(tex));
+    objects[2] = NULL;
+}
+
+/**
+ * Textured spheres:
+ */
+void textured_spheres() {
+    scene_init();
+    initialize((16.0/9.0), 400, vec3_create(0, 0, 12), vec3_create(0,0,0), 30, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    // globe:
+    texture* img = image_create("tx_gl_dirt_grass_02.png");
+    if (img == NULL) {
+        fprintf(stderr, "Failed to load earthmap.\n");
+        return;
+    }
+    objects[0] = sphere_create(vec3_create(2, 0, 0), 2, lambertian_create(img));
+
+    material* mat1 = lambertian_create(noise_create(4));
+    objects[1] = sphere_create(vec3_create(-2, 0, 0), 2, mat1);
+
+    objects[2] = NULL;
+}
+
+/**
+ * 5 colorful quadrilaterals:
+ */
+void quads() {
+    scene_init();
+    initialize(1.0, 400, vec3_create(0, 0, 9), vec3_create(0,0,0), 80, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    material* left = lambertian_create(solid_create(1, 0.2, 0.2));
+    object* q1 = quad_create(vec3_create(-3, -2, 5), vec3_create(0, 0, -4), vec3_create(0, 4, 0), left);
+    
+    material* back = lambertian_create(solid_create(0.2, 1.0, 0.2));
+    object* q2 = quad_create(vec3_create(-2, -2, 0), vec3_create(4, 0, 0), vec3_create(0, 4, 0), back);
+    
+    material* right = lambertian_create(solid_create(0.2, 0.2, 1.0));
+    object* q3 = quad_create(vec3_create(3, -2, 1), vec3_create(0, 0, 4), vec3_create(0, 4, 0), right);
+    
+    material* top = lambertian_create(solid_create(1.0, 0.5, 0.0));
+    object* q4 = quad_create(vec3_create(-2, 3, 1), vec3_create(4, 0, 0), vec3_create(0, 0, 4), top);
+    
+    material* bottom = lambertian_create(solid_create(0.2, 0.8, 0.8));
+    object* q5 = quad_create(vec3_create(-2, -3, 5), vec3_create(4, 0, 0), vec3_create(0, 0, -4), bottom);
+
+    objects[0] = q1;
+    objects[1] = q2;
+    objects[2] = q3;
+    objects[3] = q4;
+    objects[4] = q5;
+    objects[5] = NULL;
+}
+
+void simple_light() {
+    scene_init();
+    initialize((16.0/9.0), 400, vec3_create(26,3,6), vec3_create(0,2,0), 20, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0,0,0);
+
+    object* s0 = sphere_create(vec3_create(0, -1000, 0), 1000, lambertian_create(noise_create(4)));
+    object* s1 = sphere_create(vec3_create(0, 2, 0), 2, lambertian_create(noise_create(4)));
+    objects[0] = s0;
+    objects[1] = s1;
+
+    object* s2 = sphere_create(vec3_create(0,7,0), 2, emissive_create_color(vec3_create(4,4,4)));
+    objects[2] = s2;
+    objects[3] = NULL;
+}
+
+/**
+ * Triangle scene:
+ */
+void simple_triangle() {
+    scene_init();
+    initialize(1.0, 400, vec3_create(2,1,9), vec3_create(-1,0,-3), 40, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0,0,0);
+
+    object* ground = sphere_create(vec3_create(0,-1001,0),1000,lambertian_create(solid_create(0.8, 0.2, 0.2)));
+    objects[0] = ground;
+
+    object* tri0 = triangle_create(vec3_create(-1,0,-3), vec3_create(1,0,-3), vec3_create(0,1,-3), 
+                lambertian_create(solid_create(0.8, 0.8, 0.8)));
+    objects[1] = tri0;
+
+    object* tri1 = triangle_create(vec3_create(-1,0,-3), vec3_create(1,0,-3), vec3_create(0,-1,-3),
+                lambertian_create(solid_create(0.1, 0.7, 0.9)));
+    objects[2] = tri1;
+
+    object* tri2 = triangle_create(vec3_create(-2,0,-1), vec3_create(-2,0,-3), vec3_create(-2,1,-2), 
+                    emissive_create_color(vec3_create(0.8, 0.2, 0.2)));
+    objects[3] = tri2;
+
+    object* tri3 = triangle_create(vec3_create(-2,0,-1), vec3_create(-2,0,-3), vec3_create(-2,-1,-2), 
+                    emissive_create_color(vec3_create(1.0, 0.65, 0.0)));
+    objects[4] = tri3;
+
+    material* top = emissive_create(solid_create(1.0, 0.5, 0.0));
+    object* q4 = quad_create(vec3_create(-2, 2, -1), vec3_create(4, 0, 0), vec3_create(0, 0, 4), top);
+    objects[5] = q4;
+
+    objects[6] = NULL;
+}
+
+/**
+ * Generates a low-poly eevee model:
+ */
+void low_poly_mesh() {
+    scene_init();
+    initialize(1.0, 400, vec3_create(0, 0, 0), vec3_create(0, 0, 0), 45, vec3_create(0,0,1), 0);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    material* m1 = lambertian_create(solid_create(.388, .235, .082));
+    material *m2 = lambertian_create(solid_create(.937, .859, .714));
+    object* eevee_body = load_binary_stl("eevee_lowpoly_flowalistik_dual1.STL", m1);
+    object* eevee_fluff = load_binary_stl("eevee_lowpoly_flowalistik_dual2.STL", m2);
+
+    objects[0] = eevee_body;
+    objects[1] = eevee_fluff;
+
+    point3 center = aabb_center(eevee_body->bbox);
+    double diag = aabb_diagonal(eevee_body->bbox);
+
+    initialize(1.0, 400, vec3_create(center.x - diag * .25, center.y - diag * 2.0, center.z + diag * 0.5), center, 45, vec3_create(0,0,1), 0);
+    c->background = vec3_create(0.7, 0.8, 1);
+
+    // ground sphere:
+    material* mat = lambertian_create(solid_create(0.5, 0.5, 0.5));
+    objects[2] = sphere_create(vec3_create(center.x, center.y, eevee_body->bbox.z.min - 1000), 1000, mat);
+    objects[3] = NULL;
+}
+
+/**
+ * Final put together scene:
+ */
+void final_scene() {
+    int capacity = 10;
+    scene_init();
+    initialize(1.0, 400, vec3_create(478,278,-600), vec3_create(278,278,0), 40, vec3_create(0,1,0), 0);
+    c->background = vec3_create(0,0,0);
+
+    material* ground = lambertian_create(solid_create(0.48,0.83,0.53));
+    int boxes_per_side = 20;
+    int n = 0;
+    for (int i = 0; i < boxes_per_side; i++) {
+        for (int j = 0; j < boxes_per_side; j++) {
+            double w = 100.0;
+            double x0 = -1000.0 + i*w;
+            double z0 = -1000.0 + j*w;
+            double y0 = 0.0;
+            double x1 = x0 + w;
+            double y1 = random_double(interval_create(1.0,101.0));
+            double z1 = z0 + w;
+
+            object** boxes = box(vec3_create(x0,y0,z0), vec3_create(x1,y1,z1), ground);
+            for (int k = 0; k < 6; k++) {
+                if (n >= capacity) {
+                    capacity *= 2;
+                    objects = realloc(objects, sizeof(object*) * capacity);
+                    if (objects == NULL) {
+                        perror("Realloc error.");
+                        exit(1);
+                    }
+                }
+                objects[n++] = boxes[k];
+            }
+        }
+    }
+
+    // light:
+    objects[n++] = quad_create(vec3_create(123, 554, 147), vec3_create(300, 0, 0), vec3_create(0, 0, 265), emissive_create(solid_create(4,4,4)));
+
+    // textured sphere:
+    texture* img = image_create("tx_item_pot_glass_peach_01.png");
+    objects[n++] = sphere_create(vec3_create(400,200,400), 100, lambertian_create(img));
+
+    // moving sphere:
+    vec3 center1 = vec3_create(400,400,200);
+    vec3 center2 = vec3_add(center1, vec3_create(30,0,0));
+    objects[n++] = moving_sphere_create(center1, center2, 50, lambertian_create(solid_create(0.7,0.3,0.1)));
+
+    // noisy sphere:
+    objects[n++] = sphere_create(vec3_create(220,280,300), 80, lambertian_create(noise_create(4)));
+
+    // dielectric sphere:
+    objects[n++] = sphere_create(vec3_create(360, 150, 145), 70, dielectric_create(1.5));
+
+    // metal sphere:
+    objects[n++] = sphere_create(vec3_create(0,150,145), 50, metal_create(vec3_create(0.8,0.8,0.9), 0.01));
+
+    objects[n] = NULL;
+}
